@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home/Home';
 import Inicio from './pages/Inicio/Inicio';
 import Sidebar from './components/Sidebar';
+import Usuarios from './pages/Usuarios/Usuarios';
 import './App.css';
 
 const Layout = () => {
@@ -18,7 +19,7 @@ const Layout = () => {
         </div>
 
         {/* Contenido principal dinámico */}
-        <main className="">
+        <main className="flex w-full h-full bg-black">
           <Outlet /> {/* Componente dinámico según la ruta */}
         </main>
       </div>
@@ -33,7 +34,8 @@ function App() {
         {/* Todas las rutas que usan el Layout */}
         <Route element={<Layout />}>
           <Route index element={<Inicio />} /> {/* Ruta raíz */}
-          <Route path="/home" element={<Home />} />
+          <Route path="/inicio" element={<Home />} />
+          <Route path="/usuarios" element={<Usuarios />} />
 
           {/* Ejemplo de rutas adicionales */}
           {/* <Route path="/products" element={<Products />} /> */}

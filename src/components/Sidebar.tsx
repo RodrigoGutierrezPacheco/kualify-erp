@@ -1,29 +1,26 @@
 import { Frame, Navigation } from '@shopify/polaris';
-import { HomeMajor, OrderStatusMinor, ProductCostMajor } from '@shopify/polaris-icons';
+import { HomeMajor, OrderStatusMinor } from '@shopify/polaris-icons';
+import { useLocation } from 'react-router-dom';
 
 export default function Sidebar() {
+    const location = useLocation();
+
     return (
         <Frame>
-            <Navigation location="/">
+            <Navigation location={location.pathname}>
                 <Navigation.Section
                     items={[
                         {
-                            url: '#',
-                            label: 'Home',
+                            url: '/inicio',
+                            label: 'Inicio',
                             icon: HomeMajor,
+                            matches: location.pathname === '/inicio'
                         },
                         {
-                            url: '#',
-                            excludePaths: ['#'],
-                            label: 'Orders',
+                            url: '/usuarios',
+                            label: 'Usuarios',
                             icon: OrderStatusMinor,
-                            badge: '15',
-                        },
-                        {
-                            url: '#',
-                            excludePaths: ['#'],
-                            label: 'Products',
-                            icon: ProductCostMajor,
+                            matches: location.pathname === '/usuarios'
                         },
                     ]}
                 />
