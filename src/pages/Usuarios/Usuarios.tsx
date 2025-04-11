@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button, IndexTable, Text, useIndexResourceState } from "@shopify/polaris";
+import { Button, IndexTable, Text, useIndexResourceState, Banner, Box } from "@shopify/polaris";
 import { getAllUsers } from "../../services/users";
 import CreateUserModal from "../../components/Modals/CreateUserModal";
+import DeleteUserModal from "../../components/Modals/DeleteUserModal";
 
 export interface getAllUsersResponse {
     data: {
@@ -14,27 +15,41 @@ export interface getAllUsersResponse {
 
 export default function Usuarios() {
     const [isOpenCreate, setIsOpenCreate] = useState(false);
+    const [isOPenDelete, setIsOpenDelete] = useState(false);
     const [allUsers, setAllUsers] = useState<getAllUsersResponse["data"]>([]);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const fetchUsers = async () => {
-        const response = await getAllUsers();
-        setAllUsers(response.data); // Asegúrate de acceder a response.data
+        try {
+            const response = await getAllUsers();
+            setAllUsers(response.data);
+        } catch (err) {
+            setError("Error al cargar usuarios");
+        }
     };
 
     useEffect(() => {
         fetchUsers();
     }, []);
 
-    // Configuración para la tabla seleccionable (opcional)
-    const { selectedResources, allResourcesSelected, handleSelectionChange } =
+    const { selectedResources, allResourcesSelected, handleSelectionChange, clearSelection } =
         useIndexResourceState(allUsers);
 
+    const bulkActions = [
+        {
+            content:"Ver",
+            onAction: () => setIsOpenCreate(true),
+        },
+        {
+            content: "Eliminar seleccionados",
+            onAction: () => setIsOpenDelete(true),
+            destructive: true,
+        },
+    ];
+
     const rowMarkup = allUsers.map((user, index) => (
-        <IndexTable.Row
-            id={user.id}
-            key={user.id}
-            position={index}
-        >
+        <IndexTable.Row id={user.id} key={user.id} position={index} selected={selectedResources.includes(user.id)}>
             <IndexTable.Cell>
                 <Text variant="bodyMd" fontWeight="bold" as="span">
                     {user.id}
@@ -57,12 +72,22 @@ export default function Usuarios() {
                 <Button onClick={() => setIsOpenCreate(true)}>Crear usuario</Button>
             </div>
 
+            {error && (
+                <Box padding="400">
+                    <Banner title={error} onDismiss={() => setError("")} />
+                </Box>
+            )}
+
+            {success && (
+                <Box padding="400">
+                    <Banner title={success} onDismiss={() => setSuccess("")} />
+                </Box>
+            )}
+
             <IndexTable
                 resourceName={{ singular: 'usuario', plural: 'usuarios' }}
                 itemCount={allUsers.length}
-                selectedItemsCount={
-                    allResourcesSelected ? 'All' : selectedResources.length
-                }
+                selectedItemsCount={allResourcesSelected ? 'All' : selectedResources.length}
                 onSelectionChange={handleSelectionChange}
                 headings={[
                     { title: 'ID' },
@@ -70,6 +95,7 @@ export default function Usuarios() {
                     { title: 'Email' },
                     { title: 'Rol' },
                 ]}
+                promotedBulkActions={bulkActions}
             >
                 {rowMarkup}
             </IndexTable>
@@ -79,8 +105,20 @@ export default function Usuarios() {
                     isOpen={isOpenCreate}
                     setIsOpen={setIsOpenCreate}
                     refetchUsers={fetchUsers}
+                    userId={selectedResources[0]}
                 />
             )}
+
+            {isOPenDelete && (
+                <DeleteUserModal
+                    isOpen={isOPenDelete}
+                    setIsOpen={setIsOpenDelete}
+                    refetchUsers={fetchUsers}
+                    userId={selectedResources[0]}
+                    clearSelection={clearSelection}
+                />
+            )}
+
         </div>
     );
 }
