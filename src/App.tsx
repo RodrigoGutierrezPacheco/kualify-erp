@@ -19,7 +19,7 @@ const Layout = () => {
         </div>
 
         {/* Contenido principal dinámico */}
-        <main className="flex w-full h-full bg-black">
+        <main className="flex w-full h-full p-5">
           <Outlet /> {/* Componente dinámico según la ruta */}
         </main>
       </div>

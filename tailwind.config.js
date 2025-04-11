@@ -9,6 +9,6 @@ module.exports = {
     },
     plugins: [],
     corePlugins: {
-      preflight: false, // Importante para compatibilidad con Polaris
+      preflight: false,
     }
   }
