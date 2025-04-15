@@ -5,6 +5,7 @@ import Inicio from './pages/Inicio/Inicio';
 import Sidebar from './components/Sidebar';
 import Usuarios from './pages/Usuarios/Usuarios';
 import Profesionales from './pages/Profesionales/Profesionales';
+import Administradores from './pages/Administradores/Administradores';
 import './App.css';
 
 const Layout = () => {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/inicio" element={<Home />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/profesionales" element={<Profesionales />} />
+          <Route path="/administradores" element={<Administradores />} />
         </Route>
 
         {/* Ejemplo de ruta sin Layout (para login/register) */}
