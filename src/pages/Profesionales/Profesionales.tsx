@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { Button, IndexTable, Text, useIndexResourceState, Banner, Box } from "@shopify/polaris";
-import { getAllUsers } from "../../services/users";
-import CreateUserModal from "../../components/Modals/CreateUserModal";
+import { getAllProfesionals } from "../../services/profesionals";
+import CreateProfesionalModal from "../../components/Modals/CreateProfesionalModal";
 import DeleteUserModal from "../../components/Modals/DeleteUserModal";
 
 export interface getAllUsersResponse {
     data: {
         id: string;
-        username: string;
+        profesionalname: string;
         email: string;
         role: string;
     }[];
 }
 
-export default function Usuarios() {
+export default function Profesionales() {
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const [isOPenDelete, setIsOpenDelete] = useState(false);
     const [allUsers, setAllUsers] = useState<getAllUsersResponse["data"]>([]);
@@ -22,7 +22,7 @@ export default function Usuarios() {
 
     const fetchUsers = async () => {
         try {
-            const response = await getAllUsers();
+            const response = await getAllProfesionals();
             setAllUsers(response.data);
         } catch (err) {
             setError("Error al cargar usuarios");
@@ -55,21 +55,16 @@ export default function Usuarios() {
                     {user.id}
                 </Text>
             </IndexTable.Cell>
-            <IndexTable.Cell>{user.username}</IndexTable.Cell>
+            <IndexTable.Cell>{user.profesionalname}</IndexTable.Cell>
             <IndexTable.Cell>{user.email}</IndexTable.Cell>
-            <IndexTable.Cell>
-                <Text as="span" variant="bodyMd">
-                    {user.role}
-                </Text>
-            </IndexTable.Cell>
         </IndexTable.Row>
     ));
 
     return (
         <div className="w-full">
             <div className="flex w-full justify-between items-center mb-4">
-                <span className="font-bold text-[20px]">Usuarios</span>
-                <Button onClick={() => setIsOpenCreate(true)}>Crear usuario</Button>
+                <span className="font-bold text-[20px]">Profesionales</span>
+                <Button onClick={() => setIsOpenCreate(true)}>Crear profesional</Button>
             </div>
 
             {error && (
@@ -93,7 +88,6 @@ export default function Usuarios() {
                     { title: 'ID' },
                     { title: 'Nombre de usuario' },
                     { title: 'Email' },
-                    { title: 'Rol' },
                 ]}
                 promotedBulkActions={bulkActions}
             >
@@ -101,11 +95,11 @@ export default function Usuarios() {
             </IndexTable>
 
             {isOpenCreate && (
-                <CreateUserModal
+                <CreateProfesionalModal
                     isOpen={isOpenCreate}
                     setIsOpen={setIsOpenCreate}
-                    refetchUsers={fetchUsers}
-                    userId={selectedResources[0]}
+                    refetchProfesionals={fetchUsers}
+                    profesionalId={selectedResources[0]}
                 />
             )}
 
@@ -116,7 +110,7 @@ export default function Usuarios() {
                     refetchUsers={fetchUsers}
                     userId={selectedResources[0]}
                     clearSelection={clearSelection}
-                    userType={"Usuario"}
+                    userType="Profesional"
                 />
             )}
 

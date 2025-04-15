@@ -22,6 +22,12 @@ export default function Sidebar() {
                             icon: OrderStatusMinor,
                             matches: location.pathname === '/usuarios'
                         },
+                        {
+                            url: '/profesionales',
+                            label: 'Profesionales',
+                            icon: OrderStatusMinor,
+                            matches: location.pathname === '/profesionales'
+                        },
                     ]}
                 />
             </Navigation>

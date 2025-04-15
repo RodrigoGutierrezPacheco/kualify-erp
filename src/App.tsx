@@ -4,6 +4,7 @@ import Home from './pages/Home/Home';
 import Inicio from './pages/Inicio/Inicio';
 import Sidebar from './components/Sidebar';
 import Usuarios from './pages/Usuarios/Usuarios';
+import Profesionales from './pages/Profesionales/Profesionales';
 import './App.css';
 
 const Layout = () => {
@@ -36,10 +37,7 @@ function App() {
           <Route index element={<Inicio />} /> {/* Ruta raíz */}
           <Route path="/inicio" element={<Home />} />
           <Route path="/usuarios" element={<Usuarios />} />
-
-          {/* Ejemplo de rutas adicionales */}
-          {/* <Route path="/products" element={<Products />} /> */}
-          {/* <Route path="/settings" element={<Settings />} /> */}
+          <Route path="/profesionales" element={<Profesionales />} />
         </Route>
 
         {/* Ejemplo de ruta sin Layout (para login/register) */}
