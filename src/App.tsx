@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import Usuarios from './pages/Usuarios/Usuarios';
 import Profesionales from './pages/Profesionales/Profesionales';
 import Administradores from './pages/Administradores/Administradores';
+import InfoProfesional from './pages/Profesionales/Profesional[id]';
 import './App.css';
 
 const Layout = () => {
@@ -39,6 +40,7 @@ function App() {
           <Route path="/inicio" element={<Home />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/profesionales" element={<Profesionales />} />
+          <Route path="/profesional/:id" element={<InfoProfesional />} />
           <Route path="/administradores" element={<Administradores />} />
         </Route>
 

@@ -3,6 +3,7 @@ import { Button, IndexTable, Text, useIndexResourceState, Banner, Box } from "@s
 import { getAllProfesionals } from "../../services/profesionals";
 import CreateProfesionalModal from "../../components/Modals/CreateProfesionalModal";
 import DeleteUserModal from "../../components/Modals/DeleteUserModal";
+import { useNavigate } from "react-router-dom";
 
 export interface getAllUsersResponse {
     data: {
@@ -14,6 +15,7 @@ export interface getAllUsersResponse {
 }
 
 export default function Profesionales() {
+    const navigate = useNavigate();
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const [isOPenDelete, setIsOpenDelete] = useState(false);
     const [allUsers, setAllUsers] = useState<getAllUsersResponse["data"]>([]);
@@ -39,7 +41,7 @@ export default function Profesionales() {
     const bulkActions = [
         {
             content: "Ver",
-            onAction: () => setIsOpenCreate(true),
+            onAction: () => navigate(`/profesional/${selectedResources[0]}`),
         },
         {
             content: "Eliminar seleccionados",
