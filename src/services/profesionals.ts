@@ -67,7 +67,10 @@ export const deleteProfesionalById = async (id: string) => {
   }
 };
 
-export const updateProfesionalById = async (id: string, form: CreateProfesional) => {
+export const updateProfesionalById = async (
+  id: string,
+  form: CreateProfesional
+) => {
   try {
     const response = await fetch(`${APP_URL}/profesionals/${id}`, {
       method: "PATCH",
@@ -82,3 +85,13 @@ export const updateProfesionalById = async (id: string, form: CreateProfesional)
     return error;
   }
 };
+
+// En tus tipos o interfaces
+export interface ProfesionalDocument {
+  tipo: string;
+  nombre?: string;
+  contenido?: string; // base64
+  size?: number;
+  mimeType?: string;
+  file: string;
+}

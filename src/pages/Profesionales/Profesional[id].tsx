@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Card } from "@shopify/polaris";
 import { getProfesionalById } from "../../services/profesionals";
+import Documents from "./Documents";
 export interface ProfesionalInfoBasica {
     id: string;
     profesionalname: string;
@@ -17,7 +19,7 @@ export default function InfoProfesional() {
         if (id) {
             getProfesionalById(id)
                 .then((response) => {
-                    setInfoProfesional(response.data); 
+                    setInfoProfesional(response.data);
                 })
                 .catch((error) => {
                     console.error("Error al obtener profesional:", error);
@@ -33,11 +35,12 @@ export default function InfoProfesional() {
     if (!infoProfesional) return <div>No se encontró el profesional.</div>;
 
     return (
-        <div>
+        <Card>
             <h2>Información del Profesional</h2>
             <p><strong>ID:</strong> {infoProfesional.id}</p>
             <p><strong>Nombre:</strong> {infoProfesional.profesionalname}</p>
             <p><strong>Email:</strong> {infoProfesional.email}</p>
-        </div>
+            <Documents id={id ?? ""} />
+        </Card>
     );
 }

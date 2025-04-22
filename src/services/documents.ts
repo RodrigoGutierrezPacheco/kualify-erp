@@ -6,24 +6,22 @@ export interface Document {
 }
 
 export const uploadProfesionalDocument = async (
-  idProfesional: string,
-  formData: Document
+  profesionalId: string,
+  formData: FormData
 ) => {
-  try {
-    const response = await fetch(
-      `${APP_URL}/profesionales/${idProfesional}/documentos`,
-      {
-        method: "POST",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-    return response.json();
-  } catch (error) {
-    return error;
+  const response = await fetch(
+    `${APP_URL}/profesionales/${profesionalId}/documentos`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error al subir el documento");
   }
+
+  return response.json();
 };
 
 export const getProfesionalDocuments = async (idProfesional: string) => {
@@ -53,6 +51,24 @@ export const deleteProfesionalDocument = async (
       `${APP_URL}/profesionales/${idProfesional}/documentos/${idDocumento}`,
       {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+};
+
+export const auditProfesionalDocument = async (idProfesional: string, idDocumento:string) => {
+  try {
+    const response = await fetch(
+      `${APP_URL}/profesionales/${idProfesional}/documentos/${idDocumento}/auditar`,
+      {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
