@@ -1,7 +1,7 @@
 import { Frame, Modal, TextContainer } from '@shopify/polaris';
 import { changeStatus } from '../../services/users';
 import { changeStatusProfesional } from '../../services/profesionals';
-import { deleteAdminById } from '../../services/admins';
+import { changeStatusAdmin } from '../../services/admins';
 
 export interface DeleteUserProps {
     isOpen: boolean;
@@ -18,7 +18,7 @@ export default function ChangeStatusModal({ isOpen, setIsOpen, refetchUsers, use
     const handleDelete = async () => {
         if (userType === 'Profesional') await changeStatusProfesional(userId,!status);
         if (userType === 'Usuario') await changeStatus(userId,!status);
-        if (userType === 'Administrador') await deleteAdminById(userId);
+        if (userType === 'Administrador') await changeStatusAdmin(userId,!status);
         setIsOpen(false);
         refetchUsers && refetchUsers();
         clearSelection();

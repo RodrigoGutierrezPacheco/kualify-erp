@@ -82,3 +82,19 @@ export const updateAdminById = async (id: string, form: CreateAdmin) => {
     return error;
   }
 };
+
+export const changeStatusAdmin = async (id: string, status: boolean) => {
+  try {
+    const response = await fetch(`${APP_URL}/admins/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ status }),
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+};
