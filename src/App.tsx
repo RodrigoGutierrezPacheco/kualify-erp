@@ -54,33 +54,33 @@ const AuthRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 // Componente para protección por roles
-const RoleProtectedRoute = ({ 
-  children, 
-  allowedRoles 
-}: { 
-  children: JSX.Element, 
-  allowedRoles: string[] 
-}) => {
-  const token = localStorage.getItem('kf');
+// const RoleProtectedRoute = ({ 
+//   children, 
+//   allowedRoles 
+// }: { 
+//   children: JSX.Element, 
+//   allowedRoles: string[] 
+// }) => {
+//   const token = localStorage.getItem('kf');
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
+//   if (!token) {
+//     return <Navigate to="/login" replace />;
+//   }
 
-  try {
-    const decoded: { role?: string } = jwtDecode(token);
-    const userRole = decoded.role;
+//   try {
+//     const decoded: { role?: string } = jwtDecode(token);
+//     const userRole = decoded.role;
 
-    if (!userRole || !allowedRoles.includes(userRole)) {
-      return <Navigate to="/inicio" replace />;
-    }
+//     if (!userRole || !allowedRoles.includes(userRole)) {
+//       return <Navigate to="/inicio" replace />;
+//     }
 
-    return children;
-  } catch (error) {
-    localStorage.removeItem('kf');
-    return <Navigate to="/login" replace />;
-  }
-};
+//     return children;
+//   } catch (error) {
+//     localStorage.removeItem('kf');
+//     return <Navigate to="/login" replace />;
+//   }
+// };
 
 const Layout = () => {
   return (
@@ -111,16 +111,14 @@ function App() {
           <Route index element={<Inicio />} />
           <Route path="/inicio" element={<Home />} />
           <Route path="/usuarios" element={
-            <RoleProtectedRoute allowedRoles={['admin', 'manager']}>
+            // <RoleProtectedRoute allowedRoles={['admin', 'manager']}>
               <Usuarios />
-            </RoleProtectedRoute>
+            // </RoleProtectedRoute>
           } />
           <Route path="/profesionales" element={<Profesionales />} />
           <Route path="/profesional/:id" element={<InfoProfesional />} />
           <Route path="/administradores" element={
-            <RoleProtectedRoute allowedRoles={['admin']}>
               <Administradores />
-            </RoleProtectedRoute>
           } />
         </Route>
 

@@ -86,6 +86,38 @@ export const updateProfesionalById = async (
   }
 };
 
+export const changeStatusProfesional = async (id: string, status: boolean) => {
+  try {
+    const response = await fetch(`${APP_URL}/profesionals/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ status }),
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+};
+
+export const auditProfesional = async (id: string, auditado:boolean) => {
+  try {
+    const response = await fetch(`${APP_URL}/profesionals/${id}/auditar`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ auditado }),
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+}
+
 // En tus tipos o interfaces
 export interface ProfesionalDocument {
   tipo: string;

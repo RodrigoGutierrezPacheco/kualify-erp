@@ -62,8 +62,8 @@ export default function Administradores() {
     return (
         <div className="w-full">
             <div className="flex w-full justify-between items-center mb-4">
-                <span className="font-bold text-[20px]">Profesionales</span>
-                <Button onClick={() => setIsOpenCreate(true)}>Crear profesional</Button>
+                <span className="font-bold text-[20px]">Administradores</span>
+                <Button onClick={() => setIsOpenCreate(true)}>Crear administrador</Button>
             </div>
 
             {error && (

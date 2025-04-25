@@ -82,3 +82,19 @@ export const updateUserById = async (id: string, form: CreateUserProps) => {
     return error;
   }
 };
+
+export const changeStatus = async (id: string, status: boolean) => {
+  try {
+    const response = await fetch(`${APP_URL}/users/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ status }),
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+};
