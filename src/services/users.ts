@@ -4,6 +4,7 @@ export interface CreateUserProps {
   email: string;
   username: string;
   password: string;
+  phoneNumber: string;
 }
 
 export const createUser = async (form: CreateUserProps) => {

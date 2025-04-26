@@ -14,9 +14,11 @@ export default function CreateUserModal({ isOpen, setIsOpen, refetchUsers, userI
     const [formData, setFormData] = useState({
         email: '',
         username: '',
+        phoneNumber: '',
         password: '',
         confirmPassword: ''
     });
+
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
     const [fetchingUser, setFetchingUser] = useState(false);
@@ -31,24 +33,22 @@ export default function CreateUserModal({ isOpen, setIsOpen, refetchUsers, userI
                         setFormData({
                             email: response.data.email,
                             username: response.data.username,
+                            phoneNumber: response.data.phoneNumber || '',
                             password: '',
                             confirmPassword: ''
                         });
-                    } else {
-                        setErrors({ form: 'Failed to load user data' });
-                        setIsOpen(false);
                     }
-                } catch (error) {
+                } catch {
                     setErrors({ form: 'Error loading user data' });
                     setIsOpen(false);
                 } finally {
                     setFetchingUser(false);
                 }
-            } else if (!userId && isOpen) {
-                // Reset form for new user
+            } else {
                 setFormData({
                     email: '',
                     username: '',
+                    phoneNumber: '',
                     password: '',
                     confirmPassword: ''
                 });
@@ -59,14 +59,8 @@ export default function CreateUserModal({ isOpen, setIsOpen, refetchUsers, userI
     }, [userId, isOpen, setIsOpen]);
 
     const handleChange = (field: keyof typeof formData) => (value: string) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
-        // Clear error when user starts typing
-        if (errors[field]) {
-            setErrors(prev => ({ ...prev, [field]: '' }));
-        }
+        setFormData(prev => ({ ...prev, [field]: value }));
+        if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
     const validateForm = () => {
@@ -78,8 +72,7 @@ export default function CreateUserModal({ isOpen, setIsOpen, refetchUsers, userI
         } else if (!validateEmail(formData.email)) {
             newErrors.email = 'Invalid email format';
         }
-        
-        // Only validate password fields if it's a new user or password is being changed
+
         if (!userId || formData.password || formData.confirmPassword) {
             if (!formData.password) {
                 newErrors.password = 'Password is required';
@@ -102,61 +95,34 @@ export default function CreateUserModal({ isOpen, setIsOpen, refetchUsers, userI
 
         setLoading(true);
         try {
-            let response;
-            if (userId) {
-                // Update existing user
-                const updateData: any = {
-                    email: formData.email,
-                    username: formData.username
-                };
-                // Only include password if it's being changed
-                if (formData.password) {
-                    updateData.password = formData.password;
-                }
-                
-                response = await updateUserById(userId, updateData);
-            } else {
-                // Create new user
-                response = await createUser({
+            const userData = {
+                email: formData.email,
+                username: formData.username,
+                phoneNumber: formData.phoneNumber,
+                ...(formData.password ? { password: formData.password } : {})
+            };
+
+            const response = userId
+                ? await updateUserById(userId, userData as any)
+                : await createUser({
                     email: formData.email,
                     username: formData.username,
+                    phoneNumber: formData.phoneNumber,
                     password: formData.password
                 });
-            }
-            
-            if (response.statusCode === 200 || response.statusCode === 201) {
+
+            if ([200, 201].includes(response.statusCode)) {
                 setIsOpen(false);
-                // Show success toast
+                refetchUsers?.();
             } else {
                 setErrors({ form: response.message });
             }
-        } catch (error) {
-            setErrors({ form: 'An unexpected error occurred. Please try again.' });
+        } catch {
+            setErrors({ form: 'An unexpected error occurred' });
         } finally {
             setLoading(false);
-            refetchUsers && refetchUsers();
         }
     };
-
-    if (fetchingUser) {
-        return (
-            <div className='hidden'>
-                <Frame>
-                    <Modal
-                        open={isOpen}
-                        onClose={() => setIsOpen(false)}
-                        title="Loading user data..."
-                    >
-                        <Modal.Section>
-                            <TextContainer>
-                                <p>Loading user information...</p>
-                            </TextContainer>
-                        </Modal.Section>
-                    </Modal>
-                </Frame>
-            </div>
-        );
-    }
 
     return (
         <div className='hidden'>
@@ -166,73 +132,70 @@ export default function CreateUserModal({ isOpen, setIsOpen, refetchUsers, userI
                     onClose={() => setIsOpen(false)}
                     title={userId ? 'Update User' : 'Create User'}
                     primaryAction={{
-                        content: userId ? 'Update User' : 'Create User',
+                        content: userId ? 'Update' : 'Create',
                         onAction: handleSubmit,
-                        loading: loading,
+                        loading,
                         disabled: loading || fetchingUser
                     }}
-                    secondaryActions={[
-                        {
-                            content: 'Cancel',
-                            onAction: () => setIsOpen(false),
-                        },
-                    ]}
+                    secondaryActions={[{
+                        content: 'Cancel',
+                        onAction: () => setIsOpen(false),
+                    }]}
                 >
                     <Modal.Section>
                         <TextContainer>
-                            {errors.form && (
-                                <Banner>
-                                    {errors.form}
-                                </Banner>
-                            )}
+                            {errors.form && <Banner tone="critical">{errors.form}</Banner>}
 
-                            <div style={{ marginBottom: '16px' }}>
-                                <TextField
-                                    label="Username"
-                                    value={formData.username}
-                                    onChange={handleChange('username')}
-                                    error={errors.username}
-                                    autoComplete="username"
-                                    disabled={fetchingUser}
-                                />
-                            </div>
+                            <TextField
+                                label="Username"
+                                value={formData.username}
+                                onChange={handleChange('username')}
+                                error={errors.username}
+                                autoComplete="username"
+                                disabled={fetchingUser}
+                            />
 
-                            <div style={{ marginBottom: '16px' }}>
-                                <TextField
-                                    label="Email"
-                                    value={formData.email}
-                                    onChange={handleChange('email')}
-                                    type="email"
-                                    error={errors.email}
-                                    autoComplete="email"
-                                    disabled={fetchingUser}
-                                />
-                            </div>
+                            <TextField
+                                label="Email"
+                                value={formData.email}
+                                onChange={handleChange('email')}
+                                type="email"
+                                error={errors.email}
+                                autoComplete="email"
+                                disabled={fetchingUser}
+                            />
 
-                            <div style={{ marginBottom: '16px' }}>
-                                <TextField
-                                    label="Password"
-                                    value={formData.password}
-                                    onChange={handleChange('password')}
-                                    type="password"
-                                    error={errors.password}
-                                    autoComplete="new-password"
-                                    helpText={userId ? "Leave blank to keep current password" : undefined}
-                                    disabled={fetchingUser}
-                                />
-                            </div>
+                            <TextField
+                                label="Phone Number"
+                                value={formData.phoneNumber}
+                                onChange={handleChange('phoneNumber')}
+                                type="tel"
+                                error={errors.phoneNumber}
+                                autoComplete="tel"
+                                disabled={fetchingUser}
+                            />
+
+                            <TextField
+                                label="Password"
+                                value={formData.password}
+                                onChange={handleChange('password')}
+                                type="password"
+                                error={errors.password}
+                                autoComplete="new-password"
+                                helpText={userId ? "Leave blank to keep current password" : undefined}
+                                disabled={fetchingUser}
+                            />
+
                             {(!userId || formData.password) && (
-                                <div style={{ marginBottom: '16px' }}>
-                                    <TextField
-                                        label="Confirm Password"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange('confirmPassword')}
-                                        type="password"
-                                        error={errors.confirmPassword}
-                                        autoComplete="new-password"
-                                        disabled={fetchingUser}
-                                    />
-                                </div>
+                                <TextField
+                                    label="Confirm Password"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange('confirmPassword')}
+                                    type="password"
+                                    error={errors.confirmPassword}
+                                    autoComplete="new-password"
+                                    disabled={fetchingUser}
+                                />
                             )}
                         </TextContainer>
                     </Modal.Section>
