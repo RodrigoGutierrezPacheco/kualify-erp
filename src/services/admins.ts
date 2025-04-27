@@ -6,6 +6,8 @@ export interface CreateAdmin {
   password: string;
 }
 
+const token = localStorage.getItem("kf");
+
 export const createAdmin = async (form: CreateAdmin) => {
   try {
     const response = await fetch(`${APP_URL}/admins`, {
@@ -13,6 +15,7 @@ export const createAdmin = async (form: CreateAdmin) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -29,6 +32,7 @@ export const getAllAdmins = async () => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -44,6 +48,7 @@ export const getAdminById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -59,6 +64,7 @@ export const deleteAdminById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -74,6 +80,7 @@ export const updateAdminById = async (id: string, form: CreateAdmin) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -90,6 +97,7 @@ export const changeStatusAdmin = async (id: string, status: boolean) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status }),
     });
