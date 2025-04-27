@@ -6,6 +6,8 @@ export interface CreateProfesional {
   password: string;
 }
 
+const token = localStorage.getItem("kf");
+
 export const createProfesional = async (form: CreateProfesional) => {
   try {
     const response = await fetch(`${APP_URL}/profesionals`, {
@@ -13,6 +15,7 @@ export const createProfesional = async (form: CreateProfesional) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -29,6 +32,7 @@ export const getAllProfesionals = async () => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -44,6 +48,7 @@ export const getProfesionalById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -59,6 +64,7 @@ export const deleteProfesionalById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -77,6 +83,7 @@ export const updateProfesionalById = async (
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -93,6 +100,7 @@ export const changeStatusProfesional = async (id: string, status: boolean) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status }),
     });
@@ -102,13 +110,14 @@ export const changeStatusProfesional = async (id: string, status: boolean) => {
   }
 };
 
-export const auditProfesional = async (id: string, auditado:boolean) => {
+export const auditProfesional = async (id: string, auditado: boolean) => {
   try {
     const response = await fetch(`${APP_URL}/profesionals/${id}/auditar`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ auditado }),
     });
@@ -116,7 +125,7 @@ export const auditProfesional = async (id: string, auditado:boolean) => {
   } catch (error) {
     return error;
   }
-}
+};
 
 // En tus tipos o interfaces
 export interface ProfesionalDocument {
