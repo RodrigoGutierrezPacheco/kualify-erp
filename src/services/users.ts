@@ -7,6 +7,8 @@ export interface CreateUserProps {
   phoneNumber: string;
 }
 
+const token = localStorage.getItem("kf");
+
 export const createUser = async (form: CreateUserProps) => {
   try {
     const response = await fetch(`${APP_URL}/users`, {
@@ -14,6 +16,7 @@ export const createUser = async (form: CreateUserProps) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -30,6 +33,7 @@ export const getAllUsers = async () => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -45,6 +49,7 @@ export const getUserById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -60,6 +65,7 @@ export const deleteUserById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.json();
@@ -75,6 +81,7 @@ export const updateUserById = async (id: string, form: CreateUserProps) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -91,6 +98,7 @@ export const changeStatus = async (id: string, status: boolean) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status }),
     });

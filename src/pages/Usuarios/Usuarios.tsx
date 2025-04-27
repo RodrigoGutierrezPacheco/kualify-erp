@@ -16,6 +16,7 @@ export interface getAllUsersResponse {
 }
 
 export default function Usuarios() {
+    const token = localStorage.getItem("kf");
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const [isOPenDelete, setIsOpenDelete] = useState(false);
     const [isOpenStatus, setIsOpenStatus] = useState(false);
