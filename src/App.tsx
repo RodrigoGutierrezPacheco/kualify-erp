@@ -36,19 +36,19 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 
 // Componente para rutas de autenticación (login/register)
 const AuthRoute = ({ children }: { children: JSX.Element }) => {
-  const token = localStorage.getItem('kf');
+  // const token = localStorage.getItem('kf');
 
-  if (token) {
-    // Verificar si el token es válido
-    try {
-      const decoded: { exp?: number } = jwtDecode(token);
-      if (decoded.exp && decoded.exp * 1000 > Date.now()) {
-        return <Navigate to="/inicio" replace />;
-      }
-    } catch {
-      localStorage.removeItem('kf');
-    }
-  }
+  // if (token) {
+  //   // Verificar si el token es válido
+  //   try {
+  //     const decoded: { exp?: number } = jwtDecode(token);
+  //     if (decoded.exp && decoded.exp * 1000 > Date.now()) {
+  //       return <Navigate to="/inicio" replace />;
+  //     }
+  //   } catch {
+  //     localStorage.removeItem('kf');
+  //   }
+  // }
 
   return children;
 };

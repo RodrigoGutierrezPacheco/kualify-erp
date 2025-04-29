@@ -4,7 +4,7 @@ export interface Document {
   file: File;
   tipo: string;
 }
-
+const token = localStorage.getItem("kf");
 export const uploadProfesionalDocument = async (
   profesionalId: string,
   formData: FormData
@@ -14,6 +14,9 @@ export const uploadProfesionalDocument = async (
     {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
@@ -33,6 +36,7 @@ export const getProfesionalDocuments = async (idProfesional: string) => {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -54,6 +58,7 @@ export const deleteProfesionalDocument = async (
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -63,7 +68,7 @@ export const deleteProfesionalDocument = async (
   }
 };
 
-export const auditProfesionalDocument = async (idProfesional: string, idDocumento:string) => {
+export const auditProfesionalDocument = async (idProfesional: string, idDocumento:string, comentario:string, auditado:boolean) => {
   try {
     const response = await fetch(
       `${APP_URL}/profesionales/${idProfesional}/documentos/${idDocumento}/auditar`,
@@ -72,7 +77,9 @@ export const auditProfesionalDocument = async (idProfesional: string, idDocument
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({comentario, auditado})
       }
     );
     return response.json();

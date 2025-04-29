@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { getProfesionalDocuments, deleteProfesionalDocument, auditProfesionalDocument } from "../../services/documents";
+import { getProfesionalDocuments, deleteProfesionalDocument } from "../../services/documents";
 import DocumentsModal from "../../components/Modals/DocumentsModal";
 import { Badge, Button } from "@shopify/polaris";
+import ModalAuditDocument from "../../components/Modals/AuditDocument";
 
 export interface DocumentInfoProps {
     id: string;
 }
 
-type DocumentType = 'acta_nacimiento' | 'comprobante_domicilio' | 'constancia_fiscal' | 'ine_pasaporte';
+type DocumentType = 'acta_nacimiento' | 'comprobante_domicilio' | 'constancia_fiscal' | 'ine_pasaporte' | 'profile_image';
 
 interface Document {
     id: string;
@@ -18,7 +19,8 @@ interface Document {
 
 export default function Documents({ id }: DocumentInfoProps) {
     const [documents, setDocuments] = useState<Document[]>([]);
-    console.log(documents)
+    const [idDocumento, setIdDocumento] = useState('');
+    const [isOpenAudit, setIsOpenAudit] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +30,8 @@ export default function Documents({ id }: DocumentInfoProps) {
         'acta_nacimiento',
         'comprobante_domicilio',
         'constancia_fiscal',
-        'ine_pasaporte'
+        'ine_pasaporte',
+        'profile_image'
     ];
 
     const handleGetDocuments = async () => {
@@ -84,16 +87,6 @@ export default function Documents({ id }: DocumentInfoProps) {
         }
     }
 
-    const handleAudit = async (idDocumento: string) => {
-        try{
-            const response = await auditProfesionalDocument(id, idDocumento);
-            handleGetDocuments();
-            console.log(response)
-        } catch(error){
-            console.log(error)
-        }
-    }
-
     return (
         <div className="space-y-4">
             <h2 className="text-xl font-bold">Documentos del Profesional</h2>
@@ -123,8 +116,9 @@ export default function Documents({ id }: DocumentInfoProps) {
                                 >
                                     Reemplazar
                                 </button>
-                                <Button onClick={()=>{
-                                    handleAudit(doc.id)
+                                <Button onClick={() => {
+                                    setIdDocumento(doc.id)
+                                    setIsOpenAudit(true);
                                 }}>Auditar</Button>
                                 <Badge tone={doc?.auditado ? 'success' : 'critical'}>{doc.auditado ? 'Aprobado' : 'Pendiente'}</Badge>
                             </li>
@@ -163,6 +157,15 @@ export default function Documents({ id }: DocumentInfoProps) {
                     documentType={currentDocType || 'documento'}
                     profesionalId={id}
                     onSuccess={handleGetDocuments}
+                />
+            )}
+            {isOpenAudit && (
+                <ModalAuditDocument
+                    isOpen={isOpenAudit}
+                    setIsOpen={setIsOpenAudit}
+                    profesionalId={id}
+                    refetch={handleGetDocuments}
+                    documentId={idDocumento}
                 />
             )}
         </div>
